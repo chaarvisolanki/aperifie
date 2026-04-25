@@ -1,71 +1,148 @@
 # APERIFY — Product Specification
 
-## 1. Concept & Vision
-
-**APERIFY** is a dopamine-driven productivity platform that transforms task management from a chore into an addictive experience. Unlike static calendars that merely track time, APERIFY * engineers focus* — using AI and behavioral psychology to create a "Focus Feed" that hooks users the same way social media hooks them with content. Every completed task triggers a neurological reward loop. The platform feels like Instagram Reels for your productivity: scrollable, rewarding, impossible to put down.
-
-**The Pivot**: ChronosAI tracked time. APERIFY engineers flow states.
+## A Behavioral Intelligence Platform for Engineering Flow States
 
 ---
 
-## 2. Design Language
+## 1. Concept & Vision
 
-### Aesthetic Direction: "Neon-Dark Premium"
-A deep, immersive dark interface with electric accent colors that pulse and glow. Inspired by premium gaming interfaces (Discord, Linear, Raycast) crossed with the dopamine architecture of TikTok/Instagram. Every interaction should feel *premium* and *rewarding*.
+**APERIFY** is the high-performance evolution of ChronosAI and Kairos — a **Behavioral Intelligence Platform** that transforms mundane academic and professional scheduling into a high-dopamine, addictive experience. While ChronosAI focused on the *logic* of scheduling, APERIFY focuses on the *psychology* of execution.
+
+**The Core Philosophy: "Dopamine Engineering"**
+
+APERIFY represents the "Aperitif" of productivity — the perfect start to a flow state. The platform shifts the user's mindset from *"What do I have to do?"* to *"How good will it feel to finish this?"*
+
+The name embodies three pillars:
+- **AP** — Apex Performance: Reaching peak productivity
+- **ER** — Engineered Rewards: Neurological reinforcement loops
+- **IFY** — Transformation: Turning tasks into achievements
+
+**Market Position**: Not a simple to-do list, not enterprise project management, but a *behavioral optimization platform* for knowledge workers who want to achieve more without burning out.
+
+---
+
+## 2. The Three Architecture Layers
+
+### 2.1 The Intelligence Layer (The Brain)
+
+Unlike basic to-do lists, APERIFY uses **Gemini AI** as a neurological partner:
+
+**Cognitive Load Engineering:**
+- Calculates real-time "Mental Bandwidth"
+- Detects stress/fatigue patterns
+- Automatically reshuffles high-intensity tasks to optimal times
+- Prevents cognitive overload before it happens
+
+**Predictive Time-Mapping:**
+- Moves beyond static time slots to create "Flow-State Windows"
+- Predicts peak efficiency periods based on historical performance data
+- Adapts schedules dynamically as the day progresses
+- Learns from completion patterns to optimize future recommendations
+
+**Adaptive Learning:**
+- Future-proof model that "learns" procrastination habits
+- Proactively adjusts schedules to prevent "time-poverty"
+- Identifies productivity bottlenecks
+- Personalizes recommendations over time
+
+### 2.2 The "Reels-Style" Interface (The Hook)
+
+The biggest shift from ChronosAI is the replacement of Streamlit UI with a high-fidelity, gestural interface:
+
+**Focus Feed:**
+- Tasks presented as high-fidelity, scrollable "cards"
+- Smooth physics-based animations (spring: 300 stiffness, 30 damping)
+- Swipe gestures: right to complete, left to snooze
+- Infinite scroll with skeleton loading
+- Pull-to-refresh on mobile
+
+**The Reward Loop ("Juice"):**
+Completing a task triggers full celebration sequences:
+- Card scales up (1.1x) + particle burst (50-100 particles)
+- Confetti shower (1-2 seconds)
+- Streak counter animates upward
+- Haptic-style glows and color pulses
+- AI Coach celebration messages
+- Sound effects (toggleable)
+
+**Visual Design: "Neon-Dark Premium":**
+- Deep, immersive dark interface (#09090B void background)
+- Electric accent colors that pulse and glow
+- Inspired by Discord, Linear, Raycast + TikTok dopamine architecture
+- Premium gaming interface aesthetic
+
+### 2.3 The Automated Backend (The Engine)
+
+Built modular and scalable for future growth:
+
+**NLP Task Parser:**
+- Converts messy, natural language notes into structured tasks
+- Extracts deadlines, priorities, categories automatically
+- Supports voice-to-text task creation
+- Handles ambiguous inputs intelligently
+
+**Dual-Layer Database:**
+- **SQLite (current)**: Safe persistence for development
+- **PostgreSQL (production-ready via Prisma)**: Scalable for production
+- **Redis (future)**: Sub-100ms live UI response times
+
+**API-First Architecture:**
+- RESTful endpoints for all operations
+- JWT-based authentication
+- Real-time optimistic updates
+- Extensible for mobile apps and third-party integrations
+
+---
+
+## 3. Design Language
 
 ### Color Palette
-```
---bg-void:        #09090B     /* Deepest background - page base */
---bg-surface:     #0F0F12     /* Card backgrounds, elevated surfaces */
---bg-elevated:    #18181B     /* Modals, dropdowns, tooltips */
---bg-hover:       #27272A     /* Hover states */
 
---border-subtle:  #1F1F23     /* Subtle dividers */
---border-default: #27272A     /* Default borders */
---border-focus:   #3F3F46     /* Focus rings */
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `--bg-void` | #09090B | Deepest background |
+| `--bg-surface` | #0F0F12 | Card backgrounds |
+| `--bg-elevated` | #18181B | Modals, dropdowns |
+| `--bg-hover` | #27272A | Hover states |
+| `--border-subtle` | #1F1F23 | Subtle dividers |
+| `--border-default` | #27272A | Default borders |
+| `--border-focus` | #3F3F46 | Focus rings |
+| `--text-primary` | #FAFAFA | Primary text |
+| `--text-secondary` | #A1A1AA | Secondary text |
+| `--text-tertiary` | #71717A | Placeholder, disabled |
+| `--accent-violet` | #8B5CF6 | Primary accent |
+| `--accent-cyan` | #06B6D4 | Secondary accent |
+| `--accent-emerald` | #10B981 | Success, completions |
+| `--accent-amber` | #F59E0B | Warnings, streaks |
+| `--accent-rose` | #F43F5E | Errors, destructive |
 
---text-primary:   #FAFAFA     /* Primary text */
---text-secondary: #A1A1AA     /* Secondary/muted text */
---text-tertiary:  #71717A     /* Placeholder, disabled */
-
---accent-violet:  #8B5CF6     /* Primary accent - electric violet */
---accent-cyan:    #06B6D4     /* Secondary accent - lucid cyan */
---accent-emerald: #10B981     /* Success states, completions */
---accent-amber:   #F59E0B     /* Warnings, streaks */
---accent-rose:    #F43F5E     /* Errors, destructive */
-
---glow-violet:   rgba(139, 92, 246, 0.4)
---glow-cyan:     rgba(6, 182, 212, 0.3)
---glow-emerald:  rgba(16, 185, 129, 0.4)
-```
+### Glow Effects
+- Violet: `rgba(139, 92, 246, 0.4)` — Primary interactions
+- Cyan: `rgba(6, 182, 212, 0.3)` — Secondary highlights
+- Emerald: `rgba(16, 185, 129, 0.4)` — Success states
 
 ### Typography
-- **Primary**: Inter (Google Fonts) — clean, modern, excellent readability
-- **Display**: Space Grotesk (Google Fonts) — for headings, gives a tech-forward feel
-- **Mono**: JetBrains Mono (Google Fonts) — for metrics, timers, streaks
+- **Primary**: Inter — clean, modern, excellent readability
+- **Display**: Space Grotesk — tech-forward headings
+- **Mono**: JetBrains Mono — metrics, timers, streaks
 
 ### Spatial System
 - Base unit: 4px
 - Spacing scale: 4, 8, 12, 16, 24, 32, 48, 64, 96
 - Border radius: sm(6px), md(10px), lg(16px), xl(24px), full(9999px)
-- Card padding: 20px-24px
+- Card padding: 20-24px
 
 ### Motion Philosophy
-Motion is not decoration — it's **reward architecture**. Every animation communicates progress, success, or state change. Use:
-- **Spring physics** for natural feel (stiffness: 300, damping: 30)
-- **Staggered reveals** for lists (50-100ms between items)
-- **Scale + opacity** for entrances (0.95→1, 0→1)
-- **Particle bursts** for celebrations (completion effects)
-- **Morphing layouts** when cards disappear (shared layout animations)
-
-### Visual Assets
-- **Icons**: Lucide React (consistent stroke width, modern)
-- **Decorative**: Gradient orbs, blur effects, subtle grain texture
-- **Confetti**: Canvas-based particle system for celebrations
+Motion is **reward architecture**, not decoration:
+- **Spring physics**: Natural feel (stiffness: 300, damping: 30)
+- **Staggered reveals**: 50-100ms between items
+- **Scale + opacity**: Entrances (0.95→1, 0→1)
+- **Particle bursts**: Completion celebrations
+- **Morphing layouts**: Cards disappear with shared animations
 
 ---
 
-## 3. Layout & Structure
+## 4. Layout & Structure
 
 ### Page Architecture
 
@@ -76,18 +153,12 @@ Motion is not decoration — it's **reward architecture**. Every animation commu
 │                                                             │
 │  ┌─────────────────────────────────────────────────────┐   │
 │  │           FOCUS FEED (Main Content Area)            │   │
-│  │   Vertical scroll, infinite-loading task cards       │   │
-│  │   Each card is a swipeable, interactive unit        │   │
-│  │   Cards have: task info, priority, deadline, AI     │   │
+│  │   Vertical scroll, infinite-loading task cards     │   │
+│  │   Swipe → Complete | ← Snooze                      │   │
 │  │                                                      │   │
 │  │   ┌─────────────────────────────────────────────┐   │   │
 │  │   │  Task Card (animated entrance)             │   │   │
 │  │   │  [Priority] [Title] [Time] [AI Hint]        │   │   │
-│  │   │  [Swipe → Complete] [← Snooze]              │   │   │
-│  │   └─────────────────────────────────────────────┘   │   │
-│  │                                                      │   │
-│  │   ┌─────────────────────────────────────────────┐   │   │
-│  │   │  Task Card                                  │   │   │
 │  │   └─────────────────────────────────────────────┘   │   │
 │  │                                                      │   │
 │  └─────────────────────────────────────────────────────┘   │
@@ -97,209 +168,160 @@ Motion is not decoration — it's **reward architecture**. Every animation commu
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
-│  AI Coach Overlay (slides in from right)                    │
-│  Live encouragement, procrastination intervention            │
-│  "You're 15 mins past your focus window — destiny awaits!" │
+│  AI Coach Overlay (slides in)                               │
+│  "You're in a flow window. Ride it."                        │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Responsive Strategy
-- **Desktop (1024px+)**: Sidebar navigation, 2-column layouts where appropriate
+### Responsive Breakpoints
+- **Mobile (<768px)**: Bottom navigation, full-width cards, touch gestures
 - **Tablet (768-1023px)**: Collapsed sidebar, full-width feed
-- **Mobile (<768px)**: Bottom navigation, full-width cards, touch-optimized swipes
+- **Desktop (≥1024px)**: Sidebar navigation, 2-column layouts
 
 ---
 
-## 4. Features & Interactions
+## 5. Features & Interactions
 
 ### Core Features
 
-#### 4.1 Focus Feed
+#### Focus Feed
 - Vertical scrolling feed of task cards
-- Cards sorted by AI-determined priority + urgency
+- AI-determined priority + urgency sorting
 - Infinite scroll with skeleton loading
 - Pull-to-refresh on mobile
 
-#### 4.2 Task Cards
+#### Task Cards
 **Visual States:**
-- **Default**: Elevated surface, subtle border
-- **Hover**: Scale(1.02), border glow
-- **Active/Pressed**: Scale(0.98)
-- **Completing**: Scale up + fade + particle burst
-- **Snoozed**: Slide left + reschedule chip
+- Default: Elevated surface, subtle border
+- Hover: Scale(1.02), border glow
+- Active: Scale(0.98)
+- Completing: Scale up + fade + particle burst
+- Snoozed: Slide left + reschedule chip
 
 **Interactions:**
-- Swipe right → Complete (with celebration)
+- Swipe right → Complete (celebration)
 - Swipe left → Snooze (1hr, 1day, tomorrow)
 - Tap → Expand details modal
 - Long press → Quick actions menu
 
-#### 4.3 Streak System
+#### Streak System
 - Visual flame icon with current streak count
-- Streak freeze tokens (user can pause once per week)
+- Streak freeze tokens (pause once per week)
 - Weekly streak history graph
 - Milestone celebrations: 7, 30, 100, 365 days
 
-#### 4.4 AI Coach
+#### AI Coach
 - Floating chat bubble (bottom-right)
 - Real-time encouragement based on:
   - Time of day (morning motivation, afternoon push, evening wind-down)
   - Procrastination detection (no interaction in X mins)
   - Task completion rate
   - Upcoming deadline pressure
-- Personality: Encouraging, slightly playful, never guilt-tripping
+- Personality: Encouraging, playful, never guilt-tripping
 
-#### 4.5 Celebration Engine
-**Completion Celebration:**
+#### Celebration Engine
+**Completion "Juice":**
 - Card scales up (1.1x) + fades out
-- Particle burst from card center (50-100 particles)
-- Confetti shower (subtle, 1-2 seconds)
+- Particle burst from card center
+- Confetti shower (1-2 seconds)
 - Streak counter animates up
 - Sound effect option (toggleable)
 - Haptic feedback on mobile
 
-#### 4.6 Schedule View
+#### Schedule View
 - Weekly calendar with time blocks
 - Tasks color-coded by priority/category
 - AI-suggested focus blocks highlighted
 - Drag-and-drop task scheduling
 
-#### 4.7 Stats Dashboard
+#### Stats Dashboard
 - Focus score (0-100) calculated daily
 - Weekly productivity graph
 - Flow state tracking
 - Category breakdown (pie chart)
-- Comparison with past weeks
+- Week-over-week comparison
 
 ### Edge Cases
-- **Empty state**: Motivational illustration + "Add your first task" CTA
-- **Loading**: Skeleton cards with shimmer animation
-- **Error**: Toast notification with retry action
-- **Offline**: Local-first with sync indicator
-- **Procrastination detected**: Gentle AI nudge, not aggressive
+- Empty state: Motivational illustration + "Add your first task" CTA
+- Loading: Skeleton cards with shimmer animation
+- Error: Toast notification with retry action
+- Offline: Local-first with sync indicator
+- Procrastination: Gentle AI nudge, never aggressive
 
 ---
 
-## 5. Component Inventory
+## 6. Component Inventory
 
 ### Core Components
 
-#### `<TaskCard />`
-- **Props**: task, onComplete, onSnooze, onExpand
-- **States**: default, hover, swiping-right, swiping-left, completing, snoozed
-- **Animations**:
-  - Entrance: fadeInUp, staggered by index
-  - Swipe: drag constraints with spring return
-  - Complete: scale + particle burst + fade out
-  - Snooze: slide left + fade
-
-#### `<StreakCounter />`
-- **Props**: currentStreak, longestStreak, freezesAvailable
-- **States**: default, animating (on increment), milestone
-- **Animations**: Number counter animation, flame flicker, pulse on milestone
-
-#### `<AIcoachBubble />`
-- **Props**: message, isVisible
-- **States**: hidden, visible, typing
-- **Animations**: Slide up from bottom-right, text typing effect, bounce on appear
-
-#### `<CelebrationOverlay />`
-- **Props**: isActive, onComplete
-- **Types**: particle burst, confetti, streak milestone
-- **Animation**: Canvas-based particles with physics
-
-#### `<FocusFeed />`
-- **Props**: tasks, onTaskComplete, onTaskSnooze
-- **Features**: Infinite scroll, pull-to-refresh, skeleton loading
-
-#### `<TopBar />`
-- **Props**: logo, streakCount, userAvatar
-- **Elements**: Search input, streak flame, user menu
-
-#### `<BottomNav />` (Mobile)
-- **Props**: activeTab, onTabChange
-- **Tabs**: Feed, Schedule, Stats, Profile
-
-#### `<AddTaskModal />`
-- **Props**: isOpen, onClose, onSubmit
-- **Fields**: Title, description, priority, deadline, category, estimated time
-- **Animation**: Scale + fade entrance
-
-#### `<ScheduleView />`
-- **Props**: tasks, onTaskMove
-- **Features**: Week view, time slots, drag-drop
-
-#### `<StatsDashboard />`
-- **Props**: timeRange
-- **Charts**: Focus score trend, category breakdown, streak history
+| Component | States | Animations |
+|-----------|--------|------------|
+| `<TaskCard />` | default, hover, swiping, completing, snoozed | Entrance fadeInUp, swipe spring return, particle burst |
+| `<StreakCounter />` | default, animating, milestone | Number counter, flame flicker, pulse |
+| `<AIcoachBubble />` | hidden, visible, typing | Slide up, text typing effect |
+| `<CelebrationOverlay />` | particle burst, confetti, streak milestone | Canvas particles with physics |
+| `<FocusFeed />` | loading, empty, populated | Infinite scroll, skeleton shimmer |
+| `<TopBar />` | default, scrolled | Logo glow pulse |
+| `<BottomNav />` | tabs: Feed, Schedule, Stats, Profile | Active tab scale |
+| `<AddTaskModal />` | closed, open | Scale + fade entrance |
+| `<ScheduleView />` | week view, time slots | Drag-drop spring |
+| `<StatsDashboard />` | loading, populated | Chart draw animations |
 
 ---
 
-## 6. Technical Approach
+## 7. Technical Approach
 
 ### Stack
 - **Framework**: Next.js 14+ (App Router)
 - **Styling**: Tailwind CSS 3.4+
 - **Animation**: Framer Motion 11+
 - **Icons**: Lucide React
-- **State**: React Context + useReducer (simple) or Zustand (complex)
-- **AI Integration**: OpenAI GPT-4o or Claude API (configurable)
-- **Database**: SQLite via better-sqlite3 (local-first) or Prisma + PostgreSQL
+- **State**: Zustand 4.5+
+- **AI**: Gemini AI (Groq SDK / Anthropic SDK)
+- **Database**: Prisma 5.22+ with SQLite (dev) / PostgreSQL (prod)
+- **Auth**: NextAuth.js 4.24+
+- **Password**: bcryptjs
+- **Confetti**: canvas-confetti
 
 ### Project Structure
 ```
 aperify/
 ├── app/
 │   ├── layout.tsx           # Root layout with providers
-│   ├── page.tsx             # Main feed page
+│   ├── page.tsx             # Focus Feed (home)
 │   ├── globals.css          # Tailwind + custom styles
-│   ├── schedule/
-│   │   └── page.tsx         # Schedule view
-│   ├── stats/
-│   │   └── page.tsx         # Stats dashboard
-│   └── profile/
-│       └── page.tsx         # User profile
+│   ├── login/page.tsx       # Authentication
+│   ├── register/page.tsx    # User registration
+│   ├── schedule/page.tsx     # Weekly calendar view
+│   ├── stats/page.tsx       # Analytics dashboard
+│   ├── profile/page.tsx     # User settings
+│   └── api/
+│       ├── auth/            # NextAuth routes
+│       ├── tasks/           # Task CRUD
+│       ├── user/            # User data
+│       └── coach/           # AI coach endpoint
 ├── components/
-│   ├── ui/                   # Base UI components
-│   │   ├── button.tsx
-│   │   ├── card.tsx
-│   │   ├── input.tsx
-│   │   └── modal.tsx
-│   ├── task/
-│   │   ├── TaskCard.tsx
-│   │   ├── TaskFeed.tsx
-│   │   ├── AddTaskModal.tsx
-│   │   └── TaskContext.tsx
-│   ├── streak/
-│   │   ├── StreakCounter.tsx
-│   │   └── StreakBadge.tsx
-│   ├── ai/
-│   │   ├── AICoachBubble.tsx
-│   │   └── celebration/
-│   │       ├── ParticleBurst.tsx
-│   │       └── Confetti.tsx
-│   ├── layout/
-│   │   ├── TopBar.tsx
-│   │   ├── BottomNav.tsx
-│   │   └── Sidebar.tsx
-│   └── stats/
-│       ├── FocusScoreCard.tsx
-│       └── ProductivityChart.tsx
-├── lib/
-│   ├── motion.ts             # Framer Motion variants
-│   ├── utils.ts              # Utility functions
-│   └── ai/
-│       └── coach.ts          # AI coach logic
+│   ├── ui/                  # Base UI components
+│   ├── task/                # Task cards, feed, modals
+│   ├── streak/              # Streak display
+│   ├── ai/                  # Coach, celebrations
+│   ├── layout/              # TopBar, BottomNav, Sidebar
+│   └── stats/               # Charts, score cards
 ├── hooks/
-│   ├── useTaskStore.ts       # Zustand store
-│   └── useCelebration.ts
-├── types/
-│   └── index.ts              # TypeScript types
-└── public/
-    └── icons/
+│   └── useTaskStore.ts      # Zustand store
+├── lib/
+│   ├── ai/coach.ts          # AI coach logic
+│   ├── auth.ts              # Auth utilities
+│   ├── confetti.ts          # Celebration effects
+│   ├── motion.ts            # Framer Motion variants
+│   ├── prisma.ts            # Database client
+│   └── utils.ts             # Helpers
+└── prisma/
+    └── schema.prisma        # Database schema
 ```
 
 ### Data Model
+
 ```typescript
 interface Task {
   id: string;
@@ -310,20 +332,24 @@ interface Task {
   deadline?: Date;
   estimatedMinutes?: number;
   completed: boolean;
-  snoozedUntil?: Date;
-  createdAt: Date;
   completedAt?: Date;
-  flowTag?: string; // "deep-work", "quick-win", "admin"
+  snoozedUntil?: Date;
+  flowTag?: 'deep-work' | 'quick-win' | 'admin' | 'creative';
+  createdAt: Date;
+  userId: string;
 }
 
 interface User {
   id: string;
   name: string;
+  email: string;
   avatar?: string;
   streak: number;
   longestStreak: number;
   freezesAvailable: number;
   focusScore: number;
+  mentalBandwidth?: number;  // AI-calculated
+  flowStateWindows?: string[]; // AI-predicted
   preferences: {
     soundEnabled: boolean;
     hapticsEnabled: boolean;
@@ -336,21 +362,71 @@ interface StreakData {
   longest: number;
   history: { date: string; completed: number }[];
   freezesAvailable: number;
+  lastCompletedDate?: Date;
 }
 ```
 
 ---
 
-## 7. Executive Synopsis
+## 8. Executive Summary
 
-**The Problem with Productivity Apps**
+### The Problem
 
-The productivity app market is worth $15 billion, yet 90% of users abandon these tools within 30 days. Why? Because traditional task managers are fundamentally unfulfilling — they document work without making work feel rewarding. Checking off a task on a static checklist triggers no dopamine. Staring at a calendar full of obligations creates anxiety, not motivation. These apps optimize for *organization* while ignoring the psychological machinery that actually drives human behavior.
+The productivity app market is worth $15 billion, yet **90% of users abandon these tools within 30 days**. ChronosAI solved the *logic* of scheduling. APERIFY solves the *psychology* of execution.
 
-**APERIFY: Engineering Flow Instead of Tracking Time**
+Traditional task managers fail because:
+1. They trigger no neurological reward — completing a checkbox feels empty
+2. They create anxiety rather than motivation — staring at deadlines induces stress
+3. They ignore the multi-dimensional nature of human motivation
 
-APERIFY is built on a radical premise: productivity is not a logistics problem, it's a behavioral problem. Our Focus Feed transforms the mundane act of task management into an experience that users *want* to open — the same psychological hook that makes Instagram addictive. Every card swipe, every completed task, every streak milestone triggers carefully designed reward cascades that make users feel accomplished. Our AI Coach doesn't just schedule tasks; it provides real-time behavioral intervention, detecting procrastination patterns and delivering precisely-timed encouragement. The result isn't just a tool that tracks what you did — it's a system that engineers the mental state for *why* high-performers consistently execute.
+### The Solution
 
-**The Business Opportunity**
+APERIFY occupies a unique position: **not a to-do list, not enterprise PM, but a behavioral optimization platform.**
 
-APERIFY occupies a unique position in the market: not a simple to-do list, not enterprise project management, but a *behavioral optimization platform* for knowledge workers who want to achieve more without burning out. Our monetization path is clear — freemium for individual users ($0), Pro tier for power features ($12/mo), and Team tier for organizations ($25/user/mo) with shared streaks and team challenges. Early validation shows 3x better 30-day retention compared to industry benchmarks. With the global wellness and mental performance market growing 20% annually, APERIFY is positioned to become the category-defining platform for a generation that values both achievement and wellbeing.
+**Dopamine Engineering**: Every interaction — swipe, complete, streak — triggers reward cascades that make users feel accomplished. The Focus Feed mirrors social media's infinite scroll, but channels that engagement toward productivity.
+
+**AI as a Neurological Partner**: Gemini AI doesn't just schedule; it calculates Mental Bandwidth, predicts Flow-State Windows, and provides real-time behavioral intervention.
+
+**The Business Opportunity**:
+- Freemium for individuals ($0)
+- Pro tier for power features ($12/mo)
+- Team tier for organizations ($25/user/mo)
+- Early validation: 3x better 30-day retention vs industry benchmarks
+
+### Competitive Positioning
+
+| Feature | Todoist | Habitica | Forest | APERIFY |
+|---------|---------|----------|--------|---------|
+| Gamification | ✗ | ✓ | ✓ | ✓+ |
+| AI Coaching | ✗ | ✗ | ✗ | ✓ |
+| Dopamine UI | ✗ | Basic | ✓ | ✓✓✓ |
+| Flow State Focus | ✗ | ✗ | ✗ | ✓ |
+| Swipe Gestures | ✗ | ✗ | ✗ | ✓ |
+
+---
+
+## 9. Future Roadmap
+
+### Phase 1 (Current) — MVP
+- [x] Focus Feed with task cards
+- [x] Swipe gestures (complete/snooze)
+- [x] Streak system
+- [x] AI Coach (basic)
+- [x] Celebration engine
+
+### Phase 2 — Intelligence
+- [ ] Gemini AI integration for task parsing
+- [ ] Mental Bandwidth calculation
+- [ ] Flow-State Window prediction
+- [ ] Adaptive learning model
+
+### Phase 3 — Scale
+- [ ] Redis caching for 100ms responses
+- [ ] PostgreSQL migration
+- [ ] Mobile app (React Native)
+- [ ] Team streaks and challenges
+- [ ] API for third-party integrations
+
+---
+
+*APERIFY: The Aperitif of Productivity — Engineered Flow States for the Modern Knowledge Worker*
