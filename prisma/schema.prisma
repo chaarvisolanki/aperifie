@@ -13,6 +13,7 @@ model User {
   name          String?
   password      String
   avatar        String?
+  focusScore    Int       @default(75)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -21,6 +22,8 @@ model User {
   tasks         Task[]
   streakData    StreakData?
   preferences   UserPreferences?
+  taskAnalytics TaskAnalytics[]
+  restSessions  RestSession[]
 }
 
 model Account {
@@ -108,5 +111,30 @@ model UserPreferences {
   aiCoachEnabled  Boolean @default(true)
 
   userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model TaskAnalytics {
+  id                String   @id @default(cuid())
+  date              String   // YYYY-MM-DD
+  hour              Int      // 0-23
+  completedCount    Int      @default(0)
+  totalMinutes      Int      @default(0)
+  averageTimePerTask Float   @default(0)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date, hour])
+}
+
+model RestSession {
+  id          String   @id @default(cuid())
+  startTime   DateTime
+  endTime     DateTime?
+  duration    Int?     // in minutes
+  reason      String   // "fatigue", "scheduled", "manual"
+
+  userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

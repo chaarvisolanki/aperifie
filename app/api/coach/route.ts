@@ -1,17 +1,18 @@
 import { NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { getCoachMessage, getCompletionCelebration } from "@/lib/ai/coach";
 
 export async function POST(request: Request) {
   try {
-    const user = await getSession();
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { type, taskTitle, streak } = await request.json();
 
     const fullUser = await prisma.user.findUnique({
-      where: { id: user.id },
+      where: { id: session.user.id },
       include: { streakData: true, tasks: { where: { completed: false } } },
     });
 
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
 
     const todayStart = new Date(now.setHours(0, 0, 0, 0));
     const tasksCompletedToday = await prisma.task.count({
-      where: { userId: user.id, completed: true, completedAt: { gte: todayStart } },
+      where: { userId: session.user.id, completed: true, completedAt: { gte: todayStart } },
     });
 
     let response;

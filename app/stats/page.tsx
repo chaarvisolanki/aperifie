@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import { BarChart3, TrendingUp, Flame, Target, Zap, Calendar } from "lucide-react";
 import { TopBar } from "@/components/layout/TopBar";
@@ -10,7 +12,15 @@ import { useTaskStore } from "@/hooks/useTaskStore";
 import { cn } from "@/lib/utils";
 
 export default function StatsPage() {
-  const { tasks, user, streakData } = useTaskStore();
+  const { status } = useSession();
+  const { tasks, user, streakData, fetchTasks, fetchUserData } = useTaskStore();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetchTasks();
+      fetchUserData();
+    }
+  }, [status, fetchTasks, fetchUserData]);
   const completedTasks = tasks.filter((t) => t.completed);
   const incompleteTasks = tasks.filter((t) => !t.completed);
 
@@ -34,7 +44,7 @@ export default function StatsPage() {
     },
     {
       label: "Current Streak",
-      value: `${user?.streak || 0}`,
+      value: `${streakData?.current || 0}`,
       subtext: "days",
       icon: Flame,
       color: "amber",

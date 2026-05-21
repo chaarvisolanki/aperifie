@@ -1,11 +1,12 @@
 import { create } from 'zustand';
-import { Task, User, StreakData, AICoachMessage, CelebrationState } from '@/types';
+import { Task, User, StreakData, AICoachMessage, CelebrationState, CognitiveLoadState } from '@/types';
 import { generateId } from '@/lib/utils';
 
 interface TaskStore {
   tasks: Task[];
   user: User | null;
   streakData: StreakData | null;
+  cognitiveLoad: CognitiveLoadState;
   aiMessages: AICoachMessage[];
   celebration: CelebrationState;
   isAddModalOpen: boolean;
@@ -33,6 +34,11 @@ interface TaskStore {
 
   // User/Streak
   fetchUserData: () => Promise<void>;
+  updatePreference: (key: 'soundEnabled' | 'hapticsEnabled' | 'aiCoachEnabled', value: boolean) => Promise<void>;
+
+  // Cognitive Load
+  fetchCognitiveLoad: () => Promise<void>;
+  setShowRestPrompt: (show: boolean) => void;
 }
 
 const snoozeDates = {
@@ -45,6 +51,20 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
   tasks: [],
   user: null,
   streakData: null,
+  cognitiveLoad: {
+    score: 100,
+    energyLevel: 'high',
+    flowState: 'neutral',
+    flowStateScore: 50,
+    fatigueIndicators: [],
+    recommendations: [],
+    optimalBreakDuration: 5,
+    nextOptimalTaskTime: 'morning',
+    optimalTimes: [],
+    currentFlowStreak: 0,
+    recommendedTaskTypes: ['deep-work', 'quick-win'],
+    showRestPrompt: false,
+  },
   aiMessages: [],
   celebration: { isActive: false, type: 'completion' },
   isAddModalOpen: false,
@@ -112,8 +132,9 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
         body: JSON.stringify({ completed: true }),
       });
 
-      // Update streak data
+      // Update streak data and cognitive load
       await get().fetchUserData();
+      await get().fetchCognitiveLoad();
 
       if (task && !task.completed) {
         get().triggerCelebration('completion', taskId);
@@ -200,6 +221,47 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
     } catch (error) {
       console.error('Failed to fetch user data:', error);
     }
+  },
+
+  updatePreference: async (key, value) => {
+    try {
+      const res = await fetch('/api/preferences', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ [key]: value }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        set((state) => ({
+          user: state.user ? {
+            ...state.user,
+            preferences: data.preferences,
+          } : null,
+        }));
+      }
+    } catch (error) {
+      console.error('Failed to update preference:', error);
+    }
+  },
+
+  fetchCognitiveLoad: async () => {
+    try {
+      const res = await fetch('/api/energy');
+      if (res.ok) {
+        const data = await res.json();
+        // Show rest prompt if energy is low (< 40)
+        const showPrompt = data.score < 40;
+        set({ cognitiveLoad: { ...data, showRestPrompt: showPrompt } });
+      }
+    } catch (error) {
+      console.error('Failed to fetch cognitive load:', error);
+    }
+  },
+
+  setShowRestPrompt: (show) => {
+    set((state) => ({
+      cognitiveLoad: { ...state.cognitiveLoad, showRestPrompt: show },
+    }));
   },
 }));
 

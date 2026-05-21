@@ -1,18 +1,30 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 import { Flame, Calendar, BarChart3, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const navItems = [
-  { id: "feed", label: "Feed", icon: Flame },
-  { id: "schedule", label: "Schedule", icon: Calendar },
-  { id: "stats", label: "Stats", icon: BarChart3 },
-  { id: "profile", label: "Profile", icon: User },
+  { id: "feed", label: "Feed", icon: Flame, href: "/" },
+  { id: "schedule", label: "Schedule", icon: Calendar, href: "/schedule" },
+  { id: "stats", label: "Stats", icon: BarChart3, href: "/stats" },
+  { id: "profile", label: "Profile", icon: User, href: "/profile" },
 ];
 
 export function BottomNav() {
-  const activeTab = "feed";
+  const pathname = usePathname();
+
+  const getActiveTab = () => {
+    if (pathname === "/") return "feed";
+    if (pathname === "/schedule") return "schedule";
+    if (pathname === "/stats") return "stats";
+    if (pathname === "/profile") return "profile";
+    return "feed";
+  };
+
+  const activeTab = getActiveTab();
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-void/90 backdrop-blur-lg border-t border-border-subtle">
@@ -22,10 +34,9 @@ export function BottomNav() {
           const isActive = activeTab === item.id;
 
           return (
-            <motion.button
+            <Link
               key={item.id}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              href={item.href}
               className={cn(
                 "flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-colors min-w-[64px]",
                 isActive
@@ -42,7 +53,7 @@ export function BottomNav() {
                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
                 />
               )}
-            </motion.button>
+            </Link>
           );
         })}
       </div>

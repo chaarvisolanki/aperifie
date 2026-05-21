@@ -9,13 +9,15 @@ interface HistoryEntry {
 }
 
 interface ProductivityChartProps {
-  history: HistoryEntry[];
+  history?: HistoryEntry[] | null;
   className?: string;
 }
 
 export function ProductivityChart({ history, className }: ProductivityChartProps) {
+  // Use sample data if no history provided
+  const dataToUse = history && history.length > 0 ? history : null;
   // Ensure we have at least 7 days of data
-  const last7Days = getLast7Days(history);
+  const last7Days = getLast7Days(dataToUse);
 
   return (
     <motion.div
@@ -41,7 +43,10 @@ export function ProductivityChart({ history, className }: ProductivityChartProps
         <div className="flex items-end justify-between gap-2 h-24">
           {last7Days.map((day, index) => {
             const height = day.completed > 0 ? Math.max((day.completed / Math.max(...last7Days.map(d => d.completed), 1)) * 100, 20) : 10;
-            const dayLabel = new Date(day.date).toLocaleDateString("en-US", {
+            // Parse as local date to avoid timezone shifts
+            const [year, month, dayNum] = day.date.split('-').map(Number);
+            const localDate = new Date(year, month - 1, dayNum);
+            const dayLabel = localDate.toLocaleDateString("en-US", {
               weekday: "short",
             });
 
@@ -99,15 +104,19 @@ export function ProductivityChart({ history, className }: ProductivityChartProps
   );
 }
 
-function getLast7Days(history: HistoryEntry[]): HistoryEntry[] {
+function getLast7Days(history: HistoryEntry[] | null | undefined): HistoryEntry[] {
   const days: HistoryEntry[] = [];
-  const today = new Date();
+  const historyData = history || [];
 
   for (let i = 6; i >= 0; i--) {
-    const date = new Date(today);
+    const date = new Date();
     date.setDate(date.getDate() - i);
-    const dateStr = date.toISOString().split("T")[0];
-    const found = history.find(h => h.date === dateStr);
+    // Use local date string (YYYY-MM-DD) instead of UTC
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const dateStr = `${year}-${month}-${day}`;
+    const found = historyData.find(h => h.date === dateStr);
     days.push(found || { date: dateStr, completed: 0 });
   }
 

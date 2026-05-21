@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { useSession, signOut } from "next-auth/react";
 import { motion } from "framer-motion";
 import {
   User,
@@ -20,42 +22,46 @@ import { useTaskStore } from "@/hooks/useTaskStore";
 import { cn } from "@/lib/utils";
 
 export default function ProfilePage() {
-  const { user, streakData } = useTaskStore();
+  const { status } = useSession();
+  const { user, streakData, fetchUserData, updatePreference } = useTaskStore();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetchUserData();
+    }
+  }, [status, fetchUserData]);
+
+  const handleToggle = async (key: 'soundEnabled' | 'hapticsEnabled' | 'aiCoachEnabled', value: boolean) => {
+    await updatePreference(key, value);
+  };
 
   const achievements = [
-    { icon: Flame, label: "7-Day Streak", earned: (user?.streak || 0) >= 7, color: "text-amber", bg: "bg-amber/10" },
-    { icon: Trophy, label: "30-Day Streak", earned: (user?.streak || 0) >= 30, color: "text-violet", bg: "bg-violet/10" },
-    { icon: Star, label: "100-Day Streak", earned: (user?.streak || 0) >= 100, color: "text-cyan", bg: "bg-cyan/10" },
+    { icon: Flame, label: "7-Day Streak", earned: (streakData?.current || 0) >= 7, color: "text-amber", bg: "bg-amber/10" },
+    { icon: Trophy, label: "30-Day Streak", earned: (streakData?.current || 0) >= 30, color: "text-violet", bg: "bg-violet/10" },
+    { icon: Star, label: "100-Day Streak", earned: (streakData?.current || 0) >= 100, color: "text-cyan", bg: "bg-cyan/10" },
   ];
 
   const settings = [
-    {
-      icon: Bell,
-      label: "Notifications",
-      description: "Manage push notifications",
-      value: true,
-      type: "toggle" as const,
-    },
     {
       icon: Volume2,
       label: "Sound Effects",
       description: "Completion sounds & celebrations",
       value: user?.preferences?.soundEnabled ?? true,
-      type: "toggle" as const,
+      key: 'soundEnabled' as const,
     },
     {
       icon: Vibrate,
       label: "Haptic Feedback",
       description: "Vibration on mobile",
       value: user?.preferences?.hapticsEnabled ?? true,
-      type: "toggle" as const,
+      key: 'hapticsEnabled' as const,
     },
     {
       icon: Sparkles,
       label: "AI Coach",
       description: "Encouraging AI assistant",
       value: user?.preferences?.aiCoachEnabled ?? true,
-      type: "toggle" as const,
+      key: 'aiCoachEnabled' as const,
     },
   ];
 
@@ -102,7 +108,7 @@ export default function ProfilePage() {
               <div className="flex items-center gap-2 mt-2">
                 <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-amber/10 border border-amber/20">
                   <Flame className="w-4 h-4 text-amber" />
-                  <span className="text-sm font-semibold text-amber">{user?.streak || 0} day streak</span>
+                  <span className="text-sm font-semibold text-amber">{streakData?.current || 0} day streak</span>
                 </div>
               </div>
             </div>
@@ -111,7 +117,7 @@ export default function ProfilePage() {
           {/* Stats row */}
           <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-border-subtle">
             <div className="text-center">
-              <p className="font-mono text-2xl font-bold text-text-primary">{user?.streak || 0}</p>
+              <p className="font-mono text-2xl font-bold text-text-primary">{streakData?.current || 0}</p>
               <p className="text-xs text-text-tertiary">Current Streak</p>
             </div>
             <div className="text-center">
@@ -187,6 +193,7 @@ export default function ProfilePage() {
 
                   {/* Toggle */}
                   <div
+                    onClick={() => handleToggle(setting.key, !setting.value)}
                     className={cn(
                       "w-11 h-6 rounded-full transition-colors relative cursor-pointer",
                       setting.value ? "bg-violet" : "bg-elevated border border-border-subtle"
@@ -211,6 +218,7 @@ export default function ProfilePage() {
           transition={{ delay: 0.4 }}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
+          onClick={() => signOut({ callbackUrl: "/login" })}
           className="w-full mt-6 flex items-center justify-center gap-2 py-4 rounded-2xl bg-rose/10 text-rose font-medium hover:bg-rose/20 transition-colors"
         >
           <LogOut className="w-4 h-4" />

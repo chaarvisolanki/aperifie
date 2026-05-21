@@ -14,19 +14,23 @@ import { CelebrationOverlay } from "@/components/ai/celebration/CelebrationOverl
 import { FocusScoreCard } from "@/components/stats/FocusScoreCard";
 import { ProductivityChart } from "@/components/stats/ProductivityChart";
 import { QuickStats } from "@/components/stats/QuickStats";
+import { EnergyRing } from "@/components/energy/EnergyRing";
+import { FlowStateIndicator } from "@/components/energy/FlowStateIndicator";
+import { RestPrompt } from "@/components/energy/RestPrompt";
 
 export default function Home() {
   const { data: session, status } = useSession();
   const incompleteTasks = useIncompleteTasks();
-  const { isAddModalOpen, setAddModalOpen, streakData, user, fetchTasks, fetchUserData } = useTaskStore();
+  const { isAddModalOpen, setAddModalOpen, streakData, user, cognitiveLoad, fetchTasks, fetchUserData, fetchCognitiveLoad, setShowRestPrompt } = useTaskStore();
 
   // Fetch data on mount
   useEffect(() => {
     if (status === "authenticated") {
       fetchTasks();
       fetchUserData();
+      fetchCognitiveLoad();
     }
-  }, [status, fetchTasks, fetchUserData]);
+  }, [status, fetchTasks, fetchUserData, fetchCognitiveLoad]);
 
   // Show loading while auth is being checked
   if (status === "loading") {
@@ -94,6 +98,14 @@ export default function Home() {
         {/* Secondary Stats Section */}
         <section className="mt-8 grid grid-cols-1 gap-4">
           <FocusScoreCard score={user?.focusScore || 0} />
+          <FlowStateIndicator
+            flowState={cognitiveLoad.flowState || 'neutral'}
+            flowStateScore={cognitiveLoad.flowStateScore || 50}
+            currentFlowStreak={cognitiveLoad.currentFlowStreak || 0}
+          />
+          <div className="flex items-center justify-center">
+            <EnergyRing score={cognitiveLoad.score} />
+          </div>
           <ProductivityChart history={streakData?.history || []} />
         </section>
       </div>
@@ -102,6 +114,16 @@ export default function Home() {
       <AddTaskModal isOpen={isAddModalOpen} onClose={() => setAddModalOpen(false)} />
       <AICoachBubble />
       <CelebrationOverlay />
+      <RestPrompt
+        isOpen={cognitiveLoad.showRestPrompt}
+        onClose={() => setShowRestPrompt(false)}
+        onTakeBreak={() => {
+          setShowRestPrompt(false);
+          fetchCognitiveLoad();
+        }}
+        breakDuration={cognitiveLoad.optimalBreakDuration}
+        recommendation={cognitiveLoad.recommendations[0] || "Take a short break to refresh your mind."}
+      />
     </div>
   );
 }

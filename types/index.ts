@@ -52,6 +52,21 @@ export interface CelebrationState {
   taskId?: string;
 }
 
+export interface CognitiveLoadState {
+  score: number;
+  energyLevel: 'high' | 'medium' | 'low';
+  flowState: 'deep-flow' | 'flow' | 'neutral' | 'scattered' | 'blocked';
+  flowStateScore: number;
+  fatigueIndicators: string[];
+  recommendations: string[];
+  optimalBreakDuration: number;
+  nextOptimalTaskTime: string;
+  optimalTimes: { hour: number; avgTasks: number }[];
+  currentFlowStreak: number;
+  recommendedTaskTypes: string[];
+  showRestPrompt: boolean;
+}
+
 export interface ProductivityStats {
   focusScore: number;
   tasksCompleted: number;

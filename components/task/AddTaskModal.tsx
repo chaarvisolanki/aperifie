@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -16,10 +16,13 @@ import {
 import { cn } from "@/lib/utils";
 import { Priority, FlowTag } from "@/types";
 import { useTaskStore } from "@/hooks/useTaskStore";
+import { useCoach } from "@/components/ai/CoachProvider";
 
 interface AddTaskModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialDate?: Date;
+  initialHour?: number;
 }
 
 const categories = [
@@ -46,8 +49,27 @@ const flowTags: { value: FlowTag; label: string; emoji: string }[] = [
   { value: "creative", label: "Creative", emoji: "🎨" },
 ];
 
-export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
+function formatDateForInput(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
+function formatTimeRange(start: string, end: string): number {
+  if (!start || !end) return 30;
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+  const diffMs = endDate.getTime() - startDate.getTime();
+  const diffMinutes = Math.round(diffMs / (1000 * 60));
+  return Math.max(5, diffMinutes); // Minimum 5 minutes
+}
+
+export function AddTaskModal({ isOpen, onClose, initialDate, initialHour }: AddTaskModalProps) {
   const { addTask } = useTaskStore();
+  const { triggerLongTaskWarning } = useCoach();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState<Priority>("medium");
@@ -55,11 +77,51 @@ export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
   const [flowTag, setFlowTag] = useState<FlowTag | undefined>(undefined);
   const [estimatedMinutes, setEstimatedMinutes] = useState(30);
   const [hasDeadline, setHasDeadline] = useState(false);
-  const [deadline, setDeadline] = useState("");
+
+  // New: Start and End time fields
+  const [startDateTime, setStartDateTime] = useState("");
+  const [endDateTime, setEndDateTime] = useState("");
+
+  // Initialize with optional date from schedule click
+  useEffect(() => {
+    if (isOpen) {
+      const now = initialDate || new Date();
+      if (initialHour !== undefined) {
+        now.setHours(initialHour, 0, 0, 0);
+      } else {
+        now.setHours(now.getHours() + 1, 0, 0, 0);
+      }
+
+      const start = formatDateForInput(now);
+      setStartDateTime(start);
+
+      // Default end time = start + 1 hour
+      const endTime = new Date(now);
+      endTime.setHours(endTime.getHours() + 1);
+      setEndDateTime(formatDateForInput(endTime));
+
+      // Auto-calculate duration
+      const duration = formatTimeRange(start, formatDateForInput(endTime));
+      setEstimatedMinutes(duration);
+    }
+  }, [isOpen, initialDate, initialHour]);
+
+  // Auto-update duration when times change
+  useEffect(() => {
+    if (startDateTime && endDateTime) {
+      const duration = formatTimeRange(startDateTime, endDateTime);
+      setEstimatedMinutes(duration);
+    }
+  }, [startDateTime, endDateTime]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
+
+    // Trigger long task warning if needed
+    if (estimatedMinutes >= 60) {
+      triggerLongTaskWarning(estimatedMinutes);
+    }
 
     addTask({
       title: title.trim(),
@@ -68,7 +130,7 @@ export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
       category,
       flowTag,
       estimatedMinutes,
-      deadline: hasDeadline && deadline ? new Date(deadline) : undefined,
+      deadline: hasDeadline && startDateTime ? new Date(startDateTime) : undefined,
     });
 
     // Reset form
@@ -79,7 +141,8 @@ export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
     setFlowTag(undefined);
     setEstimatedMinutes(30);
     setHasDeadline(false);
-    setDeadline("");
+    setStartDateTime("");
+    setEndDateTime("");
     onClose();
   };
 
@@ -122,7 +185,7 @@ export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
               </div>
 
               {/* Form */}
-              <form onSubmit={handleSubmit} className="p-4 space-y-4">
+              <form onSubmit={handleSubmit} className="p-4 space-y-4 overflow-y-auto max-h-[60vh] scrollbar-thin scrollbar-thumb-border-subtle scrollbar-track-transparent">
                 {/* Title */}
                 <div>
                   <input
@@ -242,7 +305,7 @@ export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
                 {/* Time estimate */}
                 <div>
                   <label className="text-xs text-text-tertiary font-medium mb-2 block">
-                    Estimated Time
+                    Duration (auto-calculated)
                   </label>
                   <div className="flex items-center gap-3">
                     <input
@@ -260,47 +323,49 @@ export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
                   </div>
                 </div>
 
-                {/* Deadline toggle */}
+                {/* Schedule - Start & End Time */}
                 <div>
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <div
-                      onClick={() => setHasDeadline(!hasDeadline)}
-                      className={cn(
-                        "w-10 h-6 rounded-full transition-colors relative",
-                        hasDeadline ? "bg-violet" : "bg-elevated border border-border-subtle"
-                      )}
-                    >
-                      <motion.div
-                        animate={{ x: hasDeadline ? 16 : 2 }}
-                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                        className="absolute top-1 w-4 h-4 rounded-full bg-white shadow"
+                  <label className="text-xs text-text-tertiary font-medium mb-2 block">
+                    Schedule (Start → End)
+                  </label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs text-text-tertiary mb-1 block">Start</label>
+                      <input
+                        type="datetime-local"
+                        value={startDateTime}
+                        onChange={(e) => setStartDateTime(e.target.value)}
+                        className={cn(
+                          "w-full px-3 py-2.5 rounded-xl bg-elevated border border-border-subtle",
+                          "text-text-primary text-sm",
+                          "focus:outline-none focus:border-violet transition-colors"
+                        )}
                       />
                     </div>
-                    <span className="text-sm text-text-secondary">Set deadline</span>
-                  </label>
-
-                  <AnimatePresence>
-                    {hasDeadline && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="overflow-hidden"
-                      >
-                        <input
-                          type="datetime-local"
-                          value={deadline}
-                          onChange={(e) => setDeadline(e.target.value)}
-                          className={cn(
-                            "w-full mt-3 px-4 py-3 rounded-xl bg-elevated border border-border-subtle",
-                            "text-text-primary text-sm",
-                            "focus:outline-none focus:border-violet transition-colors"
-                          )}
-                        />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                    <div>
+                      <label className="text-xs text-text-tertiary mb-1 block">End</label>
+                      <input
+                        type="datetime-local"
+                        value={endDateTime}
+                        onChange={(e) => setEndDateTime(e.target.value)}
+                        className={cn(
+                          "w-full px-3 py-2.5 rounded-xl bg-elevated border border-border-subtle",
+                          "text-text-primary text-sm",
+                          "focus:outline-none focus:border-violet transition-colors"
+                        )}
+                      />
+                    </div>
+                  </div>
+                  {estimatedMinutes >= 60 && (
+                    <p className="text-xs text-amber mt-2 flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      Long session! Consider taking breaks in between.
+                    </p>
+                  )}
                 </div>
+
+                {/* Legacy deadline toggle - hidden, deadline comes from startDateTime */}
+                <input type="hidden" value={hasDeadline ? "true" : "false"} />
 
                 {/* Submit button */}
                 <motion.button
